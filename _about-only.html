@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<title>Work Smarter Analytics — Operator. Analyst. Builder.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#14161B;
+    --ink-2:#1B1E25;
+    --ink-3:#272B34;
+    --line:#33384200;
+    --paper:#ECE6D8;
+    --paper-dim:#C8C2B4;
+    --slate:#A6AEBA;
+    --accent:#CB9A36;
+    --accent-bright:#E6BB5C;
+    --accent2:#A8333F;
+    --accent2-soft:#DA6070;
+    --grid:rgba(203,154,54,0.055);
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Hanken Grotesk',system-ui,sans-serif;
+    font-size:17px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* drafting grid */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--grid) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:34px 34px;
+    mask-image:radial-gradient(ellipse 120% 90% at 70% 0%,#000 30%,transparent 78%);
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px;position:relative;z-index:1}
+  a{color:inherit;text-decoration:none}
+
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .serif{font-family:'Fraunces',serif}
+
+  /* ---------- header ---------- */
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);
+    background:rgba(20,22,27,.72);border-bottom:1px solid var(--ink-3)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand .logo{height:34px;width:auto;display:block}
+  .foot .brand .logo{height:21px}
+  .brand .tick{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--accent);
+    border:1px solid var(--accent);border-radius:3px;padding:2px 5px;text-transform:uppercase;transform:translateY(-2px)}
+  .menu{display:flex;gap:30px;align-items:center}
+  .menu a{font-size:.86rem;color:var(--paper-dim);transition:color .2s}
+  .menu a:hover{color:var(--paper)}
+  .btn{font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:.85rem;
+    border:1px solid var(--accent);color:var(--ink);background:var(--accent);
+    padding:9px 16px;border-radius:5px;cursor:pointer;transition:all .2s;display:inline-block}
+  .btn:hover{background:var(--accent-bright);border-color:var(--accent-bright)}
+  .btn.ghost{background:transparent;color:var(--paper)}
+  .btn.ghost:hover{background:rgba(203,154,54,.1);color:var(--accent-bright)}
+  .menu .btn{padding:8px 14px;color:var(--ink)}
+  .burger{display:none}
+
+  /* ---------- hero ---------- */
+  .hero{padding:78px 0 64px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:54px;align-items:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:26px}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent2-soft);box-shadow:0 0 10px var(--accent2)}
+  h1{font-family:'Fraunces',serif;font-weight:600;line-height:.98;letter-spacing:-.015em;
+    font-size:clamp(3.1rem,7.2vw,5.3rem);margin-bottom:8px}
+  h1 .o{color:var(--paper)} h1 .a{color:var(--accent)} h1 .b{color:var(--accent2-soft)}
+  .h1-line{overflow:hidden}
+  .h1-line span{display:inline-block;will-change:transform}
+  .subhead{font-family:'Fraunces',serif;font-weight:400;font-style:italic;
+    font-size:clamp(1.18rem,2.4vw,1.5rem);color:var(--paper);margin:20px 0 18px;line-height:1.35;max-width:30ch}
+  .lede{color:var(--paper-dim);font-size:1.02rem;max-width:42ch;margin-bottom:30px}
+  .lede b{color:var(--paper);font-weight:600}
+  .hero-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .hero-meta{margin-top:30px;display:flex;gap:26px;flex-wrap:wrap}
+  .hero-meta div .mono{display:block;margin-bottom:3px}
+  .hero-meta div b{font-family:'Fraunces',serif;font-weight:600;font-size:1.04rem}
+
+  /* ---------- live model card ---------- */
+  .model{background:linear-gradient(168deg,#1E222A,#16191F);border:1px solid var(--ink-3);
+    border-radius:14px;padding:22px 22px 20px;position:relative;
+    box-shadow:0 30px 60px -28px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.03)}
+  .model::before{content:"";position:absolute;inset:0;border-radius:14px;pointer-events:none;
+    background:
+      linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:22px 22px;opacity:.6}
+  .model-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;position:relative}
+  .model-head .ttl{font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem}
+  .model-head .tag{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;
+    color:var(--accent);border:1px solid rgba(203,154,54,.4);border-radius:20px;padding:3px 9px;white-space:nowrap}
+  .model-sub{color:var(--slate);font-size:.8rem;margin-bottom:10px;position:relative}
+  .chart-wrap{position:relative}
+  svg.chart{display:block;width:100%;height:auto}
+  .readouts{display:flex;gap:8px;margin:14px 0 6px;position:relative}
+  .readout{flex:1;background:rgba(0,0,0,.25);border:1px solid var(--ink-3);border-radius:8px;padding:9px 11px}
+  .readout .k{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--slate)}
+  .readout .v{font-family:'Fraunces',serif;font-weight:600;font-size:1.32rem;line-height:1.1;margin-top:2px}
+  .readout .v.brass{color:var(--accent-bright)}
+  .readout .v.garnet{color:var(--accent2-soft)}
+  .ctrls{position:relative;display:grid;gap:13px;margin-top:12px}
+  .ctrl{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px}
+  .ctrl label{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--paper-dim)}
+  .ctrl .val{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--accent-bright);min-width:46px;text-align:right}
+  input[type=range]{grid-column:1/-1;-webkit-appearance:none;appearance:none;width:100%;height:3px;border-radius:3px;
+    background:linear-gradient(90deg,var(--accent) var(--fill,40%),var(--ink-3) var(--fill,40%));cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+    background:var(--paper);border:3px solid var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.5);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--paper);border:3px solid var(--accent);cursor:pointer}
+  input[type=range].garnet{background:linear-gradient(90deg,var(--accent2) var(--fill,30%),var(--ink-3) var(--fill,30%))}
+  input[type=range].garnet::-webkit-slider-thumb{border-color:var(--accent2-soft)}
+  input[type=range].garnet::-moz-range-thumb{border-color:var(--accent2-soft)}
+  .model-foot{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--slate);margin-top:14px;
+    border-top:1px solid var(--ink-3);padding-top:10px;position:relative;line-height:1.5}
+
+  /* ---------- section frame ---------- */
+  section.band{padding:84px 0;position:relative}
+  .sec-head{margin-bottom:48px;max-width:64ch}
+  .sec-head .mono{display:block;margin-bottom:14px}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,4vw,2.9rem);
+    line-height:1.05;letter-spacing:-.01em;margin-bottom:14px}
+  .sec-head p{color:var(--paper-dim);font-size:1.05rem;max-width:54ch}
+
+  /* ---------- triad ---------- */
+  .triad{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ink-3);
+    border:1px solid var(--ink-3);border-radius:14px;overflow:hidden}
+  .disc{background:var(--ink);padding:34px 28px;position:relative;transition:background .25s}
+  .disc:hover{background:var(--ink-2)}
+  .disc .idx{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--accent);letter-spacing:.1em;margin-bottom:18px;display:block}
+  .disc h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.55rem;margin-bottom:6px}
+  .disc .role{font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin-bottom:16px}
+  .disc p{color:var(--paper-dim);font-size:.96rem}
+  .disc.o h3{color:var(--paper)} .disc.a h3{color:var(--accent)} .disc.b h3{color:var(--accent2-soft)}
+  .disc .bar{position:absolute;left:0;top:0;height:3px;width:0;transition:width .5s ease}
+  .disc.o .bar{background:var(--paper)} .disc.a .bar{background:var(--accent)} .disc.b .bar{background:var(--accent2-soft)}
+  .disc:hover .bar{width:100%}
+
+  /* ---------- work / proof ---------- */
+  .proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .card{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:14px;padding:30px 28px;
+    position:relative;overflow:hidden;transition:transform .25s,border-color .25s}
+  .card:hover{transform:translateY(-4px);border-color:rgba(203,154,54,.35)}
+  .card .corner{position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;
+    background:radial-gradient(circle,rgba(203,154,54,.16),transparent 70%);pointer-events:none}
+  .card.gar .corner{background:radial-gradient(circle,rgba(168,51,63,.2),transparent 70%)}
+  .card .live{display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;
+    font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin-bottom:18px}
+  .card .live .pulse{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(203,154,54,.5);animation:pulse 2.4s infinite}
+  .card.gar .live .pulse{background:var(--accent2-soft);box-shadow:0 0 0 0 rgba(168,51,63,.5);animation:pulse-g 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(203,154,54,.5)}70%{box-shadow:0 0 0 9px rgba(203,154,54,0)}100%{box-shadow:0 0 0 0 rgba(203,154,54,0)}}
+  @keyframes pulse-g{0%{box-shadow:0 0 0 0 rgba(168,51,63,.5)}70%{box-shadow:0 0 0 9px rgba(168,51,63,0)}100%{box-shadow:0 0 0 0 rgba(168,51,63,0)}}
+  .card h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.75rem;margin-bottom:4px}
+  .card .url{font-family:'IBM Plex Mono',monospace;font-size:.74rem;color:var(--accent-bright);margin-bottom:14px}
+  .card.gar .url{color:var(--accent2-soft)}
+  .card p{color:var(--paper-dim);font-size:.95rem;margin-bottom:18px}
+  .stack{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:6px}
+  .chip{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.04em;color:var(--paper-dim);
+    border:1px solid var(--ink-3);background:rgba(0,0,0,.2);border-radius:5px;padding:4px 8px}
+
+  .selected{margin-top:30px;border-top:1px solid var(--ink-3);padding-top:24px}
+  .selected .mono{display:block;margin-bottom:16px}
+  .selrow{display:grid;gap:11px}
+  .selrow span{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--paper-dim)}
+  .selrow span b{color:var(--paper);font-weight:600}
+
+  /* ---------- credentials ---------- */
+  .creds{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--ink-3);
+    border:1px solid var(--ink-3);border-radius:12px;overflow:hidden}
+  .cred{background:var(--ink);padding:26px 20px;text-align:left}
+  .cred .v{font-family:'Fraunces',serif;font-weight:600;font-size:1.7rem;color:var(--accent);line-height:1;margin-bottom:8px}
+  .cred .k{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--paper-dim);line-height:1.4}
+  .cred .k em{font-style:normal;color:var(--slate);display:block;margin-top:3px}
+
+  /* ---------- about / founder ---------- */
+  .about{display:grid;grid-template-columns:.82fr 1.18fr;gap:48px;align-items:center}
+  .about .photo{aspect-ratio:4/5;border-radius:14px;border:1px solid var(--ink-3);
+    background:linear-gradient(168deg,#1E222A,#16191F);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:12px;position:relative;overflow:hidden}
+  .about .photo::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:22px 22px;opacity:.5}
+  .about .photo .ph-mark{font-family:'Fraunces',serif;font-weight:600;font-size:3.4rem;color:var(--accent);position:relative}
+  .about .photo .ph-note{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);position:relative}
+  .about .bio p{color:var(--paper-dim);font-size:1.05rem;margin-bottom:16px}
+  .about .bio p:last-child{margin-bottom:0}
+  .about .bio b{color:var(--paper);font-weight:600}
+  @media(max-width:920px){.about{grid-template-columns:1fr;gap:30px}.about .photo{max-width:280px}}
+
+  /* ---------- engagements ---------- */
+  .eng-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .eng{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:14px;padding:30px 26px;display:flex;flex-direction:column}
+  .eng.feature{border-color:rgba(203,154,54,.45);background:linear-gradient(180deg,rgba(203,154,54,.06),var(--ink-2))}
+  .eng .tier{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  .eng h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.4rem;margin-bottom:10px}
+  .eng .price{font-family:'Fraunces',serif;font-weight:600;font-size:1.6rem;margin-bottom:4px}
+  .eng .price small{font-family:'Hanken Grotesk',sans-serif;font-size:.8rem;color:var(--slate);font-weight:400}
+  .eng .desc{color:var(--paper-dim);font-size:.92rem;margin:12px 0 18px}
+  .eng ul{list-style:none;display:grid;gap:9px;margin-top:auto}
+  .eng li{font-size:.88rem;color:var(--paper-dim);padding-left:20px;position:relative}
+  .eng li::before{content:"→";position:absolute;left:0;color:var(--accent);font-family:'IBM Plex Mono',monospace}
+
+  /* ---------- contact ---------- */
+  .contact{text-align:center;padding:96px 0}
+  .contact h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.04;margin-bottom:18px;letter-spacing:-.01em}
+  .contact h2 em{font-style:italic;color:var(--accent)}
+  .contact p{color:var(--paper-dim);max-width:46ch;margin:0 auto 30px;font-size:1.05rem}
+  .contact .hero-cta{justify-content:center}
+  .edit{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--slate);margin-top:22px}
+
+  .contact-form{max-width:540px;margin:0 auto;display:grid;gap:12px;text-align:left}
+  .contact-form .cf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .contact-form input,.contact-form textarea{font-family:'Hanken Grotesk',sans-serif;font-size:.95rem;color:var(--paper);background:rgba(0,0,0,.25);border:1px solid var(--ink-3);border-radius:8px;padding:12px 14px;width:100%;resize:vertical}
+  .contact-form input::placeholder,.contact-form textarea::placeholder{color:var(--slate)}
+  .contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--accent)}
+  .contact-form button{justify-self:center;margin-top:4px}
+  .contact-form .cf-msg{font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.04em;text-align:center;min-height:1.1em;color:var(--slate)}
+  .contact-form .cf-hp{position:absolute;left:-9999px}
+  .contact-form .cf-top{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);text-align:center;margin-top:2px}
+  .contact-form .cf-top:hover{color:var(--accent-bright)}
+  @media(max-width:520px){.contact-form .cf-row{grid-template-columns:1fr}}
+
+  footer{border-top:1px solid var(--ink-3);padding:34px 0;position:relative;z-index:1}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+  .foot .mono{color:var(--slate)}
+  .foot .brand{font-size:.95rem}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:920px){
+    .hero-grid{grid-template-columns:1fr;gap:40px}
+    .model{order:2}
+    .triad{grid-template-columns:1fr}
+    .proof-grid{grid-template-columns:1fr}
+    .creds{grid-template-columns:repeat(2,1fr)}
+    .eng-grid{grid-template-columns:1fr}
+    .menu a:not(.btn){display:none}
+  }
+  @media(max-width:520px){
+    body{font-size:16px}
+    .wrap{padding:0 18px}
+    .creds{grid-template-columns:1fr}
+    .hero{padding:48px 0 40px}
+    section.band{padding:64px 0}
+    .menu{display:none}
+    .brand .logo{height:20px}
+  }
+
+  :focus-visible{outline:2px solid var(--accent-bright);outline-offset:3px;border-radius:3px}
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    .h1-line span{transform:none!important}
+  }
+</style>
+</head>
+<body>
+<section class="band" id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="mono">Who you'd be working with</span>
+      <h2>Steve Kosbau</h2>
+      <p>Founder, Work Smarter Analytics · Northville, MI</p>
+    </div>
+    <div class="about">
+      <div class="photo" role="img" aria-label="Photo of Steve Kosbau — placeholder">
+        <span class="ph-mark">SK</span>
+        <span class="ph-note">photo coming soon</span>
+      </div>
+      <div class="bio">
+        <p>I came to analytics from the operator's chair, not a lab. I spent a decade as a radio-station president, running the operation in markets large and small across the country — and I watched the sharpest operators, our toughest competitors included, turn data into a durable edge. That lesson never left me.</p>
+        <p>So I went and earned the training to do it right — a <b>Bachelor of Business Administration</b>, an <b>MBA</b>, and a <b>Master of Science in Business Analytics</b>, all from <b>The University of Iowa</b> — plus finance certificates in Finance, Financial Decision-Making, and Investment Management, with an <b>MS in Finance</b> underway.</p>
+        <p>Now I bring the whole stack to small and mid-sized companies: the operating judgment to know which questions matter, the analytics to answer them, and the engineering to ship the tool that acts on the answer — one person, start to finish. That's the entire point of Work Smarter Analytics.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
