@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<title>Work Smarter Analytics — Operator. Analyst. Builder.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#14161B;
+    --ink-2:#1B1E25;
+    --ink-3:#272B34;
+    --line:#33384200;
+    --paper:#ECE6D8;
+    --paper-dim:#C8C2B4;
+    --slate:#A6AEBA;
+    --accent:#CB9A36;
+    --accent-bright:#E6BB5C;
+    --accent2:#A8333F;
+    --accent2-soft:#DA6070;
+    --grid:rgba(203,154,54,0.055);
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Hanken Grotesk',system-ui,sans-serif;
+    font-size:17px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* drafting grid */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--grid) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:34px 34px;
+    mask-image:radial-gradient(ellipse 120% 90% at 70% 0%,#000 30%,transparent 78%);
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px;position:relative;z-index:1}
+  a{color:inherit;text-decoration:none}
+
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .serif{font-family:'Fraunces',serif}
+
+  /* ---------- header ---------- */
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);
+    background:rgba(20,22,27,.72);border-bottom:1px solid var(--ink-3)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand .logo{height:34px;width:auto;display:block}
+  .foot .brand .logo{height:21px}
+  .brand .tick{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--accent);
+    border:1px solid var(--accent);border-radius:3px;padding:2px 5px;text-transform:uppercase;transform:translateY(-2px)}
+  .menu{display:flex;gap:30px;align-items:center}
+  .menu a{font-size:.86rem;color:var(--paper-dim);transition:color .2s}
+  .menu a:hover{color:var(--paper)}
+  .btn{font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:.85rem;
+    border:1px solid var(--accent);color:var(--ink);background:var(--accent);
+    padding:9px 16px;border-radius:5px;cursor:pointer;transition:all .2s;display:inline-block}
+  .btn:hover{background:var(--accent-bright);border-color:var(--accent-bright)}
+  .btn.ghost{background:transparent;color:var(--paper)}
+  .btn.ghost:hover{background:rgba(203,154,54,.1);color:var(--accent-bright)}
+  .menu .btn{padding:8px 14px;color:var(--ink)}
+  .burger{display:none}
+
+  /* ---------- hero ---------- */
+  .hero{padding:78px 0 64px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:54px;align-items:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:26px}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent2-soft);box-shadow:0 0 10px var(--accent2)}
+  h1{font-family:'Fraunces',serif;font-weight:600;line-height:.98;letter-spacing:-.015em;
+    font-size:clamp(3.1rem,7.2vw,5.3rem);margin-bottom:8px}
+  h1 .o{color:var(--paper)} h1 .a{color:var(--accent)} h1 .b{color:var(--accent2-soft)}
+  .h1-line{overflow:hidden}
+  .h1-line span{display:inline-block;will-change:transform}
+  .subhead{font-family:'Fraunces',serif;font-weight:400;font-style:italic;
+    font-size:clamp(1.18rem,2.4vw,1.5rem);color:var(--paper);margin:20px 0 18px;line-height:1.35;max-width:30ch}
+  .lede{color:var(--paper-dim);font-size:1.02rem;max-width:42ch;margin-bottom:30px}
+  .lede b{color:var(--paper);font-weight:600}
+  .hero-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .hero-meta{margin-top:30px;display:flex;gap:26px;flex-wrap:wrap}
+  .hero-meta div .mono{display:block;margin-bottom:3px}
+  .hero-meta div b{font-family:'Fraunces',serif;font-weight:600;font-size:1.04rem}
+
+  /* ---------- live model card ---------- */
+  .model{background:linear-gradient(168deg,#1E222A,#16191F);border:1px solid var(--ink-3);
+    border-radius:14px;padding:22px 22px 20px;position:relative;
+    box-shadow:0 30px 60px -28px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.03)}
+  .model::before{content:"";position:absolute;inset:0;border-radius:14px;pointer-events:none;
+    background:
+      linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:22px 22px;opacity:.6}
+  .model-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;position:relative}
+  .model-head .ttl{font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem}
+  .model-head .tag{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;
+    color:var(--accent);border:1px solid rgba(203,154,54,.4);border-radius:20px;padding:3px 9px;white-space:nowrap}
+  .model-sub{color:var(--slate);font-size:.8rem;margin-bottom:10px;position:relative}
+  .chart-wrap{position:relative}
+  svg.chart{display:block;width:100%;height:auto}
+  .readouts{display:flex;gap:8px;margin:14px 0 6px;position:relative}
+  .readout{flex:1;background:rgba(0,0,0,.25);border:1px solid var(--ink-3);border-radius:8px;padding:9px 11px}
+  .readout .k{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--slate)}
+  .readout .v{font-family:'Fraunces',serif;font-weight:600;font-size:1.32rem;line-height:1.1;margin-top:2px}
+  .readout .v.brass{color:var(--accent-bright)}
+  .readout .v.garnet{color:var(--accent2-soft)}
+  .ctrls{position:relative;display:grid;gap:13px;margin-top:12px}
+  .ctrl{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px}
+  .ctrl label{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--paper-dim)}
+  .ctrl .val{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--accent-bright);min-width:46px;text-align:right}
+  input[type=range]{grid-column:1/-1;-webkit-appearance:none;appearance:none;width:100%;height:3px;border-radius:3px;
+    background:linear-gradient(90deg,var(--accent) var(--fill,40%),var(--ink-3) var(--fill,40%));cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+    background:var(--paper);border:3px solid var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.5);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--paper);border:3px solid var(--accent);cursor:pointer}
+  input[type=range].garnet{background:linear-gradient(90deg,var(--accent2) var(--fill,30%),var(--ink-3) var(--fill,30%))}
+  input[type=range].garnet::-webkit-slider-thumb{border-color:var(--accent2-soft)}
+  input[type=range].garnet::-moz-range-thumb{border-color:var(--accent2-soft)}
+  .model-foot{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--slate);margin-top:14px;
+    border-top:1px solid var(--ink-3);padding-top:10px;position:relative;line-height:1.5}
+
+  /* ---------- section frame ---------- */
+  section.band{padding:84px 0;position:relative}
+  .sec-head{margin-bottom:48px;max-width:64ch}
+  .sec-head .mono{display:block;margin-bottom:14px}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,4vw,2.9rem);
+    line-height:1.05;letter-spacing:-.01em;margin-bottom:14px}
+  .sec-head p{color:var(--paper-dim);font-size:1.05rem;max-width:54ch}
+
+  /* ---------- triad ---------- */
+  .triad{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ink-3);
+    border:1px solid var(--ink-3);border-radius:14px;overflow:hidden}
+  .disc{background:var(--ink);padding:34px 28px;position:relative;transition:background .25s}
+  .disc:hover{background:var(--ink-2)}
+  .disc .idx{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--accent);letter-spacing:.1em;margin-bottom:18px;display:block}
+  .disc h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.55rem;margin-bottom:6px}
+  .disc .role{font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin-bottom:16px}
+  .disc p{color:var(--paper-dim);font-size:.96rem}
+  .disc.o h3{color:var(--paper)} .disc.a h3{color:var(--accent)} .disc.b h3{color:var(--accent2-soft)}
+  .disc .bar{position:absolute;left:0;top:0;height:3px;width:0;transition:width .5s ease}
+  .disc.o .bar{background:var(--paper)} .disc.a .bar{background:var(--accent)} .disc.b .bar{background:var(--accent2-soft)}
+  .disc:hover .bar{width:100%}
+
+  /* ---------- work / proof ---------- */
+  .proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .card{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:14px;padding:30px 28px;
+    position:relative;overflow:hidden;transition:transform .25s,border-color .25s}
+  .card:hover{transform:translateY(-4px);border-color:rgba(203,154,54,.35)}
+  .card .corner{position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;
+    background:radial-gradient(circle,rgba(203,154,54,.16),transparent 70%);pointer-events:none}
+  .card.gar .corner{background:radial-gradient(circle,rgba(168,51,63,.2),transparent 70%)}
+  .card .live{display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;
+    font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin-bottom:18px}
+  .card .live .pulse{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(203,154,54,.5);animation:pulse 2.4s infinite}
+  .card.gar .live .pulse{background:var(--accent2-soft);box-shadow:0 0 0 0 rgba(168,51,63,.5);animation:pulse-g 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(203,154,54,.5)}70%{box-shadow:0 0 0 9px rgba(203,154,54,0)}100%{box-shadow:0 0 0 0 rgba(203,154,54,0)}}
+  @keyframes pulse-g{0%{box-shadow:0 0 0 0 rgba(168,51,63,.5)}70%{box-shadow:0 0 0 9px rgba(168,51,63,0)}100%{box-shadow:0 0 0 0 rgba(168,51,63,0)}}
+  .card h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.75rem;margin-bottom:4px}
+  .card .url{font-family:'IBM Plex Mono',monospace;font-size:.74rem;color:var(--accent-bright);margin-bottom:14px}
+  .card.gar .url{color:var(--accent2-soft)}
+  .card p{color:var(--paper-dim);font-size:.95rem;margin-bottom:18px}
+  .stack{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:6px}
+  .chip{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.04em;color:var(--paper-dim);
+    border:1px solid var(--ink-3);background:rgba(0,0,0,.2);border-radius:5px;padding:4px 8px}
+
+  .selected{margin-top:30px;border-top:1px solid var(--ink-3);padding-top:24px}
+  .selected .mono{display:block;margin-bottom:16px}
+  .selrow{display:grid;gap:11px}
+  .selrow span{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--paper-dim)}
+  .selrow span b{color:var(--paper);font-weight:600}
+
+  /* ---------- credentials ---------- */
+  .creds{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--ink-3);
+    border:1px solid var(--ink-3);border-radius:12px;overflow:hidden}
+  .cred{background:var(--ink);padding:26px 20px;text-align:left}
+  .cred .v{font-family:'Fraunces',serif;font-weight:600;font-size:1.7rem;color:var(--accent);line-height:1;margin-bottom:8px}
+  .cred .k{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--paper-dim);line-height:1.4}
+  .cred .k em{font-style:normal;color:var(--slate);display:block;margin-top:3px}
+
+  /* ---------- about / founder ---------- */
+  .about{display:grid;grid-template-columns:.82fr 1.18fr;gap:48px;align-items:center}
+  .about .photo{aspect-ratio:4/5;border-radius:14px;border:1px solid var(--ink-3);
+    background:linear-gradient(168deg,#1E222A,#16191F);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:12px;position:relative;overflow:hidden}
+  .about .photo::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:22px 22px;opacity:.5}
+  .about .photo .ph-mark{font-family:'Fraunces',serif;font-weight:600;font-size:3.4rem;color:var(--accent);position:relative}
+  .about .photo .ph-note{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);position:relative}
+  .about .bio p{color:var(--paper-dim);font-size:1.05rem;margin-bottom:16px}
+  .about .bio p:last-child{margin-bottom:0}
+  .about .bio b{color:var(--paper);font-weight:600}
+  @media(max-width:920px){.about{grid-template-columns:1fr;gap:30px}.about .photo{max-width:280px}}
+
+  /* ---------- engagements ---------- */
+  .eng-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .eng{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:14px;padding:30px 26px;display:flex;flex-direction:column}
+  .eng.feature{border-color:rgba(203,154,54,.45);background:linear-gradient(180deg,rgba(203,154,54,.06),var(--ink-2))}
+  .eng .tier{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  .eng h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.4rem;margin-bottom:10px}
+  .eng .price{font-family:'Fraunces',serif;font-weight:600;font-size:1.6rem;margin-bottom:4px}
+  .eng .price small{font-family:'Hanken Grotesk',sans-serif;font-size:.8rem;color:var(--slate);font-weight:400}
+  .eng .desc{color:var(--paper-dim);font-size:.92rem;margin:12px 0 18px}
+  .eng ul{list-style:none;display:grid;gap:9px;margin-top:auto}
+  .eng li{font-size:.88rem;color:var(--paper-dim);padding-left:20px;position:relative}
+  .eng li::before{content:"→";position:absolute;left:0;color:var(--accent);font-family:'IBM Plex Mono',monospace}
+
+  /* ---------- contact ---------- */
+  .contact{text-align:center;padding:96px 0}
+  .contact h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.04;margin-bottom:18px;letter-spacing:-.01em}
+  .contact h2 em{font-style:italic;color:var(--accent)}
+  .contact p{color:var(--paper-dim);max-width:46ch;margin:0 auto 30px;font-size:1.05rem}
+  .contact .hero-cta{justify-content:center}
+  .edit{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--slate);margin-top:22px}
+
+  footer{border-top:1px solid var(--ink-3);padding:34px 0;position:relative;z-index:1}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+  .foot .mono{color:var(--slate)}
+  .foot .brand{font-size:.95rem}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:920px){
+    .hero-grid{grid-template-columns:1fr;gap:40px}
+    .model{order:2}
+    .triad{grid-template-columns:1fr}
+    .proof-grid{grid-template-columns:1fr}
+    .creds{grid-template-columns:repeat(2,1fr)}
+    .eng-grid{grid-template-columns:1fr}
+    .menu a:not(.btn){display:none}
+  }
+  @media(max-width:520px){
+    body{font-size:16px}
+    .wrap{padding:0 18px}
+    .creds{grid-template-columns:1fr}
+    .hero{padding:48px 0 40px}
+    section.band{padding:64px 0}
+    .menu{display:none}
+    .brand .logo{height:20px}
+  }
+
+  :focus-visible{outline:2px solid var(--accent-bright);outline-offset:3px;border-radius:3px}
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    .h1-line span{transform:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><svg class="logo" viewBox="100 342 825 74" role="img" aria-label="Work Smarter Analytics" xmlns="http://www.w3.org/2000/svg"><g>
+	<g>
+		<path fill="#ffffff" d="M159.38,349.25l-11.6,35h-6.9l-8.65-25.9l-8.8,25.9h-6.95l-11.6-35h6.75l8.7,26.6l9.05-26.6h6l8.85,26.75
+			l8.95-26.75H159.38z"/>
+		<path fill="#ffffff" d="M161.83,366.75c0-10.35,8-18,18.85-18c10.85,0,18.85,7.6,18.85,18c0,10.4-8,18-18.85,18
+			C169.83,384.75,161.83,377.1,161.83,366.75z M192.98,366.75c0-7.15-5.25-12.3-12.3-12.3c-7.05,0-12.3,5.15-12.3,12.3
+			s5.25,12.3,12.3,12.3C187.73,379.05,192.98,373.9,192.98,366.75z"/>
+		<path fill="#ffffff" d="M229.33,384.25L222.18,374c-0.45,0.05-0.9,0.05-1.35,0.05h-7.9v10.2h-6.5v-35h14.4c9.2,0,14.9,4.7,14.9,12.45
+			c0,5.3-2.7,9.2-7.45,11.05l8.05,11.5H229.33z M220.53,354.75h-7.6v13.95h7.6c5.7,0,8.65-2.6,8.65-7S226.23,354.75,220.53,354.75z"
+			/>
+		<path fill="#ffffff" d="M255.03,369.6l-5.55,5.7v8.95h-6.5v-35h6.5v17.95l17.3-17.95h7.3l-14.7,15.65l15.6,19.35h-7.6L255.03,369.6z"
+			/>
+		<path fill="#CB9A36" d="M295.73,380.55l2.25-5.05c2.8,2.25,7.25,3.85,11.55,3.85c5.45,0,7.75-1.95,7.75-4.55
+			c0-7.55-20.8-2.6-20.8-15.6c0-5.65,4.5-10.45,14.1-10.45c4.2,0,8.6,1.1,11.65,3.1l-2.05,5.05c-3.15-1.85-6.6-2.75-9.65-2.75
+			c-5.4,0-7.6,2.1-7.6,4.75c0,7.45,20.75,2.6,20.75,15.45c0,5.6-4.55,10.4-14.15,10.4C304.08,384.75,298.63,383.05,295.73,380.55z"
+			/>
+		<path fill="#CB9A36" d="M362.28,384.25l-0.05-23.2l-11.5,19.2h-2.9l-11.5-18.9v22.9h-6.2v-35h5.35l13.9,23.2l13.65-23.2h5.35l0.05,35
+			H362.28z"/>
+		<path fill="#CB9A36" d="M400.58,376.15h-17.5l-3.45,8.1h-6.7l15.75-35h6.4l15.8,35h-6.8L400.58,376.15z M398.43,371.05l-6.6-15.3
+			l-6.55,15.3H398.43z"/>
+		<path fill="#CB9A36" d="M438.23,384.25L431.07,374c-0.45,0.05-0.9,0.05-1.35,0.05h-7.9v10.2h-6.5v-35h14.4c9.2,0,14.9,4.7,14.9,12.45
+			c0,5.3-2.7,9.2-7.45,11.05l8.05,11.5H438.23z M429.42,354.75h-7.6v13.95h7.6c5.7,0,8.65-2.6,8.65-7S435.13,354.75,429.42,354.75z"
+			/>
+		<path fill="#CB9A36" d="M458.47,354.75h-11.6v-5.5h29.7v5.5h-11.6v29.5h-6.5V354.75z"/>
+		<path fill="#CB9A36" d="M507.73,378.8v5.45h-26.25v-35h25.55v5.45h-19.05v9.1h16.9v5.35h-16.9v9.65H507.73z"/>
+		<path fill="#CB9A36" d="M537.88,384.25L530.72,374c-0.45,0.05-0.9,0.05-1.35,0.05h-7.9v10.2h-6.5v-35h14.4c9.2,0,14.9,4.7,14.9,12.45
+			c0,5.3-2.7,9.2-7.45,11.05l8.05,11.5H537.88z M529.07,354.75h-7.6v13.95h7.6c5.7,0,8.65-2.6,8.65-7S534.78,354.75,529.07,354.75z"
+			/>
+		<path fill="#ffffff" d="M594.22,376.15h-17.5l-3.45,8.1h-6.7l15.75-35h6.4l15.8,35h-6.8L594.22,376.15z M592.07,371.05l-6.6-15.3
+			l-6.55,15.3H592.07z"/>
+		<path fill="#ffffff" d="M640.07,349.25v35h-5.35l-19.3-23.7v23.7h-6.45v-35h5.35l19.3,23.7v-23.7H640.07z"/>
+		<path fill="#ffffff" d="M672.17,376.15h-17.5l-3.45,8.1h-6.7l15.75-35h6.4l15.8,35h-6.8L672.17,376.15z M670.02,371.05l-6.6-15.3
+			l-6.55,15.3H670.02z"/>
+		<path fill="#ffffff" d="M686.92,349.25h6.5v29.5h18.3v5.5h-24.8V349.25z"/>
+		<path fill="#ffffff" d="M728.32,371.9v12.35h-6.5V372l-13.75-22.75h6.95l10.25,17.05l10.35-17.05h6.4L728.32,371.9z"/>
+		<path fill="#ffffff" d="M752.87,354.75h-11.6v-5.5h29.7v5.5h-11.6v29.5h-6.5V354.75z"/>
+		<path fill="#ffffff" d="M775.87,349.25h6.5v35h-6.5V349.25z"/>
+		<path fill="#ffffff" d="M789.32,366.75c0-10.45,8-18,18.75-18c5.7,0,10.6,2.05,13.85,5.85l-4.2,3.95c-2.55-2.75-5.7-4.1-9.35-4.1
+			c-7.25,0-12.5,5.1-12.5,12.3c0,7.2,5.25,12.3,12.5,12.3c3.65,0,6.8-1.35,9.35-4.15l4.2,4c-3.25,3.8-8.15,5.85-13.9,5.85
+			C797.32,384.75,789.32,377.2,789.32,366.75z"/>
+		<path fill="#ffffff" d="M825.02,380.55l2.25-5.05c2.8,2.25,7.25,3.85,11.55,3.85c5.45,0,7.75-1.95,7.75-4.55
+			c0-7.55-20.8-2.6-20.8-15.6c0-5.65,4.5-10.45,14.1-10.45c4.2,0,8.6,1.1,11.65,3.1l-2.05,5.05c-3.15-1.85-6.6-2.75-9.65-2.75
+			c-5.4,0-7.6,2.1-7.6,4.75c0,7.45,20.75,2.6,20.75,15.45c0,5.6-4.55,10.4-14.15,10.4C833.37,384.75,827.92,383.05,825.02,380.55z"
+			/>
+	</g>
+	<g>
+		<polygon fill="#ffffff" points="897.01,372.94 876.45,348.76 862.22,348.76 887.79,378.31 862.49,408.93 876.72,408.93 
+			901.62,378.11 		"/>
+		<polygon fill="#CB9A36" points="915.16,372.55 895.2,348.76 880.97,348.76 906.3,378.29 880.99,408.93 895.22,408.93 920.12,378.11 
+					"/>
+	</g>
+	<g>
+		<path fill="#ffffff" d="M121.33,404.57c0,2.79-2.22,4.41-6.47,4.41h-8.36v-16.17h7.9c4.04,0,6.12,1.69,6.12,4.2
+			c0,1.62-0.83,2.86-2.15,3.56C120.17,401.15,121.33,402.53,121.33,404.57z M110.22,395.63v3.81h3.72c1.83,0,2.82-0.65,2.82-1.92
+			c0-1.27-0.99-1.89-2.82-1.89H110.22z M117.56,404.17c0-1.36-1.04-2.01-2.98-2.01h-4.37v4h4.37
+			C116.52,406.16,117.56,405.56,117.56,404.17z"/>
+		<path fill="#ffffff" d="M145.74,405.97v3h-12.52v-16.17h12.22v3h-8.5v3.51h7.51v2.91h-7.51v3.74H145.74z"/>
+		<path fill="#ffffff" d="M166.12,395.86h-5.17v-3.05h14.09v3.05h-5.17v13.12h-3.74V395.86z"/>
+		<path fill="#ffffff" d="M195.68,395.86h-5.17v-3.05h14.09v3.05h-5.17v13.12h-3.74V395.86z"/>
+		<path fill="#ffffff" d="M233.17,405.97v3h-12.52v-16.17h12.22v3h-8.5v3.51h7.51v2.91h-7.51v3.74H233.17z"/>
+		<path fill="#ffffff" d="M256.51,408.98l-3.12-4.5h-0.18h-3.26v4.5h-3.74v-16.17h7c4.32,0,7.02,2.24,7.02,5.87
+			c0,2.43-1.22,4.2-3.32,5.1l3.62,5.2H256.51z M253,395.86h-3.05v5.64H253c2.29,0,3.44-1.06,3.44-2.82
+			C256.44,396.9,255.28,395.86,253,395.86z"/>
+		<path fill="#ffffff" d="M608.56,392.81l-5.29,16.17h-4.02l-3.56-10.95l-3.67,10.95h-3.99l-5.31-16.17h3.88l3.65,11.36l3.81-11.36
+			h3.46l3.69,11.46l3.76-11.46H608.56z"/>
+		<path fill="#ffffff" d="M625.69,392.81h3.74v16.17h-3.74V392.81z"/>
+		<path fill="#ffffff" d="M655.67,395.86h-5.17v-3.05h14.09v3.05h-5.17v13.12h-3.74V395.86z"/>
+		<path fill="#ffffff" d="M697.47,392.81v16.17h-3.74v-6.63h-7.34v6.63h-3.74v-16.17h3.74v6.37h7.34v-6.37H697.47z"/>
+		<path fill="#ffffff" d="M740.95,392.81h7.34c5.29,0,8.91,3.19,8.91,8.08s-3.62,8.08-8.91,8.08h-7.34V392.81z M748.11,405.9
+			c3.21,0,5.31-1.92,5.31-5.01c0-3.09-2.1-5.01-5.31-5.01h-3.42v10.02H748.11z"/>
+		<path fill="#ffffff" d="M783.5,405.51h-7.51l-1.43,3.46h-3.83l7.21-16.17h3.69l7.23,16.17h-3.93L783.5,405.51z M782.32,402.67
+			l-2.56-6.19l-2.56,6.19H782.32z"/>
+		<path fill="#ffffff" d="M809.14,395.86h-5.17v-3.05h14.09v3.05h-5.17v13.12h-3.74V395.86z"/>
+		<path fill="#ffffff" d="M844.95,405.51h-7.5l-1.43,3.46h-3.83l7.21-16.17h3.69l7.23,16.17h-3.93L844.95,405.51z M843.78,402.67
+			l-2.56-6.19l-2.56,6.19H843.78z"/>
+		<path fill="#CB9A36" d="M523.48,407.38l1.27-2.82c1.36,0.99,3.4,1.69,5.34,1.69c2.22,0,3.12-0.74,3.12-1.73c0-3.03-9.4-0.95-9.4-6.95
+			c0-2.75,2.22-5.03,6.81-5.03c2.03,0,4.11,0.48,5.61,1.43l-1.15,2.84c-1.5-0.85-3.05-1.27-4.48-1.27c-2.22,0-3.07,0.83-3.07,1.85
+			c0,2.98,9.4,0.92,9.4,6.86c0,2.7-2.24,5.01-6.86,5.01C527.5,409.25,524.91,408.49,523.48,407.38z"/>
+		<path fill="#CB9A36" d="M317.34,406.83c-1.65,1.61-3.68,2.42-6.1,2.42s-4.45-0.81-6.1-2.42c-1.65-1.61-2.48-3.62-2.48-6.02
+			c0-2.4,0.83-4.41,2.48-6.02c1.65-1.61,3.68-2.42,6.1-2.42s4.45,0.81,6.1,2.42c1.65,1.61,2.48,3.62,2.48,6.02
+			C319.81,403.21,318.99,405.22,317.34,406.83z M316.1,400.82c0-1.46-0.47-2.7-1.4-3.73c-0.93-1.03-2.08-1.54-3.45-1.54
+			c-1.36,0-2.51,0.51-3.45,1.54c-0.93,1.03-1.4,2.27-1.4,3.73s0.47,2.7,1.4,3.72c0.93,1.02,2.08,1.53,3.45,1.53
+			c1.36,0,2.51-0.51,3.45-1.53C315.63,403.52,316.1,402.28,316.1,400.82z"/>
+		<path fill="#CB9A36" d="M340.71,404.87c0.61,0.76,1.42,1.13,2.45,1.13c1.03,0,1.84-0.38,2.44-1.13c0.6-0.76,0.9-1.79,0.9-3.1v-9.02
+			h3.65v9.14c0,2.37-0.65,4.19-1.96,5.46c-1.31,1.27-2.98,1.91-5.02,1.91c-2.04,0-3.72-0.64-5.04-1.92
+			c-1.32-1.28-1.97-3.09-1.97-5.45v-9.14h3.65v9.02C339.8,403.08,340.11,404.11,340.71,404.87z"/>
+		<path fill="#CB9A36" d="M373.35,395.9v13.18h-3.65V395.9h-4.63v-3.15h12.9v3.15H373.35z"/>
+		<path fill="#CB9A36" d="M401.64,405.86c1.79,0,3.26-0.71,4.39-2.13l2.34,2.41c-1.85,2.09-4.04,3.13-6.56,3.13s-4.59-0.79-6.22-2.38
+			c-1.63-1.59-2.44-3.6-2.44-6.02c0-2.42,0.83-4.44,2.49-6.07c1.66-1.62,3.69-2.43,6.09-2.43c2.68,0,4.92,1.02,6.73,3.06l-2.27,2.57
+			c-1.15-1.43-2.59-2.15-4.3-2.15c-1.37,0-2.54,0.45-3.52,1.34s-1.46,2.1-1.46,3.62s0.46,2.74,1.38,3.66
+			C399.21,405.4,400.33,405.86,401.64,405.86z"/>
+		<path fill="#CB9A36" d="M440.12,406.83c-1.65,1.61-3.68,2.42-6.1,2.42s-4.45-0.81-6.1-2.42c-1.65-1.61-2.48-3.62-2.48-6.02
+			c0-2.4,0.83-4.41,2.48-6.02c1.65-1.61,3.68-2.42,6.1-2.42s4.45,0.81,6.1,2.42c1.65,1.61,2.48,3.62,2.48,6.02
+			C442.6,403.21,441.77,405.22,440.12,406.83z M438.88,400.82c0-1.46-0.47-2.7-1.4-3.73c-0.93-1.03-2.08-1.54-3.45-1.54
+			c-1.36,0-2.51,0.51-3.45,1.54c-0.93,1.03-1.4,2.27-1.4,3.73s0.47,2.7,1.4,3.72s2.08,1.53,3.45,1.53c1.36,0,2.51-0.51,3.45-1.53
+			S438.88,402.28,438.88,400.82z"/>
+		<path fill="#CB9A36" d="M471.81,398.8l-4.42,8.93h-2.17l-4.39-8.93v10.28h-3.65v-16.34h4.93l4.21,8.97l4.23-8.97h4.91v16.34h-3.65
+			V398.8z"/>
+		<path fill="#CB9A36" d="M505.74,392.75V396h-8.13v3.37h7.31v3.11h-7.31v3.39H506v3.23h-12.04v-16.34H505.74z"/>
+	</g>
+</g></svg></a>
+    <nav class="menu">
+      <a href="#approach">Approach</a>
+      <a href="#work">Work</a>
+      <a href="#engagements">Engagements</a>
+      <a href="#contact" class="btn">Start a conversation</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="dot"></span><span class="mono">Strategic Finance &amp; Analytics Advisory · Northville, MI</span></div>
+      <h1>
+        <span class="h1-line"><span class="o">Operator.</span></span><br/>
+        <span class="h1-line"><span class="a">Analyst.</span></span><br/>
+        <span class="h1-line"><span class="b">Builder.</span></span>
+      </h1>
+      <p class="subhead">One advisor who has run the business, done the math, and shipped the software.</p>
+      <p class="lede">Work Smarter Analytics helps small and mid-sized companies make sharper decisions — then hands you the working models, dashboards, and tools to act on them. <b>Not a deck. A thing that runs.</b></p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn">Start a conversation</a>
+        <a href="#work" class="btn ghost">See what I've built →</a>
+      </div>
+      <div class="hero-meta">
+        <div><span class="mono">Experience</span><b>30+ yrs operating</b></div>
+        <div><span class="mono">Credentials</span><b>MBA · MS Analytics · MS Finance</b></div>
+        <div><span class="mono">On record</span><b>Granted U.S. patent</b></div>
+      </div>
+    </div>
+
+    <div class="model reveal" aria-label="Interactive revenue projection model">
+      <div class="model-head">
+        <div class="ttl">Revenue projection</div>
+        <div class="tag">LIVE MODEL</div>
+      </div>
+      <div class="model-sub">Drag the inputs — this is the kind of decision tool I build for clients.</div>
+      <div class="chart-wrap">
+        <svg class="chart" viewBox="0 0 420 180" role="img" aria-label="12-month MRR projection chart">
+          <defs>
+            <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#CB9A36" stop-opacity="0.28"/>
+              <stop offset="100%" stop-color="#CB9A36" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g id="gridlines" stroke="#2A2F38" stroke-width="1"></g>
+          <path id="area" fill="url(#fillGrad)" d=""></path>
+          <path id="line" fill="none" stroke="#E6BB5C" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" d=""></path>
+          <g id="dots"></g>
+        </svg>
+      </div>
+      <div class="readouts">
+        <div class="readout"><div class="k">Month 12 MRR</div><div class="v brass" id="endMrr">$0</div></div>
+        <div class="readout"><div class="k">12-mo revenue</div><div class="v" id="totalRev">$0</div></div>
+        <div class="readout"><div class="k">Net mo. rate</div><div class="v garnet" id="netRate">0%</div></div>
+      </div>
+      <div class="ctrls">
+        <div class="ctrl">
+          <label for="growth">New revenue / mo</label>
+          <span class="val" id="growthVal">8%</span>
+          <input type="range" id="growth" min="0" max="14" value="8" step="0.5" />
+        </div>
+        <div class="ctrl">
+          <label for="churn">Monthly churn</label>
+          <span class="val" id="churnVal">3%</span>
+          <input type="range" id="churn" class="garnet" min="0" max="10" value="3" step="0.5" />
+        </div>
+      </div>
+      <div class="model-foot">Starting MRR $25,000 · compounding monthly · illustrative. Your real model would use your data, your seasonality, your scenarios.</div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="approach">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="mono">The difference</span>
+      <h2>Three disciplines most companies hire separately. One person who does all three.</h2>
+      <p>A consultant gives you advice. An analyst gives you a model. A developer gives you software. You usually pay for three relationships — and lose the thread between them. I keep it in one head.</p>
+    </div>
+    <div class="triad reveal">
+      <div class="disc o">
+        <span class="bar"></span>
+        <span class="idx">/ operator</span>
+        <h3>I've sat in the chair</h3>
+        <div class="role">P&amp;L · teams · hard calls</div>
+        <p>Three decades in senior operating roles, including a decade as a company president. I know the difference between a clean spreadsheet and a real decision, because I've had to make the call and live with it.</p>
+      </div>
+      <div class="disc a">
+        <span class="bar"></span>
+        <span class="idx">/ analyst</span>
+        <h3>I do the math</h3>
+        <div class="role">forecasting · finance · modeling</div>
+        <p>Graduate training in business analytics and finance, applied to the questions owners actually ask: What will next quarter look like? Where's the margin leaking? Is this priced right? Should we make this bet?</p>
+      </div>
+      <div class="disc b">
+        <span class="bar"></span>
+        <span class="idx">/ builder</span>
+        <h3>I ship the tool</h3>
+        <div class="role">apps · dashboards · automation</div>
+        <p>I don't just recommend the solution — I build it. Custom dashboards, decision models, and full software products that keep working long after the engagement ends. The proof is below: real products, live in production.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="work">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="mono">Proof of work</span>
+      <h2>These aren't case studies. They're products I built and shipped.</h2>
+      <p>Most advisors point to slides. I can point to software running in production — designed, coded, and maintained by one person. That same capability is what I bring to your decisions and your data.</p>
+    </div>
+    <div class="proof-grid">
+      <a class="card reveal" href="https://graaaade.com" target="_blank" rel="noopener">
+        <span class="corner"></span>
+        <div class="live"><span class="pulse"></span>Live product · in use today</div>
+        <h3>grAAAAde</h3>
+        <div class="url">graaaade.com ↗</div>
+        <p>An AI tutor that actually knows your textbook. Upload your course materials and it answers from <em>your</em> sources — office hours, on demand. Built end to end: retrieval engine, AI reasoning, and the full web app. I use it for my own graduate coursework.</p>
+        <div class="stack">
+          <span class="chip">RAG / retrieval</span>
+          <span class="chip">vector search</span>
+          <span class="chip">Django</span>
+          <span class="chip">LLM orchestration</span>
+        </div>
+      </a>
+      <a class="card gar reveal" href="https://leaghub.com" target="_blank" rel="noopener">
+        <span class="corner"></span>
+        <div class="live"><span class="pulse"></span>Live product · piloted with cities</div>
+        <h3>LeagHub</h3>
+        <div class="url">leaghub.com ↗</div>
+        <p>Run your league, not your spreadsheets. A full platform for municipal parks &amp; rec departments — scheduling, registration, payments, and team balancing in one place. Built, hosted, and supported solo, and already demoed to local cities.</p>
+        <div class="stack">
+          <span class="chip">Django</span>
+          <span class="chip">Stripe payments</span>
+          <span class="chip">multi-tenant SaaS</span>
+          <span class="chip">SOC 2 path</span>
+        </div>
+      </a>
+    </div>
+    <div class="selected reveal">
+      <span class="mono">Also built</span>
+      <div class="selrow">
+        <span><b>Sales analytics dashboards</b> — pipeline, forecast accuracy, rep performance (Streamlit)</span>
+        <span><b>Equity-signal models</b> — screening &amp; backtesting on market data</span>
+        <span><b>Tournament platform</b> — payments, AI team balancing, e-sign waivers</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="credentials">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="mono">On the record</span>
+      <h2>The training — and tools — behind the work.</h2>
+    </div>
+    <div class="creds reveal">
+      <div class="cred"><div class="v">MBA</div><div class="k">Business<em>strategy &amp; operations</em></div></div>
+      <div class="cred"><div class="v">MS</div><div class="k">Business Analytics<em>completed</em></div></div>
+      <div class="cred"><div class="v">MS</div><div class="k">Finance<em>2026 · in progress</em></div></div>
+      <div class="cred"><div class="v">BI</div><div class="k">Dashboards &amp; automation<em>design → deploy</em></div></div>
+      <div class="cred"><div class="v">1</div><div class="k">Granted U.S. patent<em>named inventor</em></div></div>
+      <div class="cred"><div class="v">30+</div><div class="k">Years operating<em>incl. company president</em></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / FOUNDER — DRAFT, HIDDEN until the right headshot is chosen.
+     TO PUBLISH: (1) remove the `hidden` attribute on the <section> below,
+     (2) replace the .photo placeholder block with <img class="shot" src="steve.jpg" alt="Steve Kosbau" />,
+     (3) optionally add <a href="#about">About</a> to the header nav. -->
+<section class="band" id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="mono">Who you'd be working with</span>
+      <h2>Steve Kosbau</h2>
+      <p>Founder, Work Smarter Analytics · Northville, MI</p>
+    </div>
+    <div class="about reveal">
+      <div class="photo" role="img" aria-label="Photo of Steve Kosbau — placeholder">
+        <span class="ph-mark">SK</span>
+        <span class="ph-note">photo coming soon</span>
+      </div>
+      <div class="bio">
+        <p>I came to analytics from the operator's chair, not a lab. I spent a decade as a radio-station president, running the operation in markets large and small across the country — and I watched the sharpest operators, our toughest competitors included, turn data into a durable edge. That lesson never left me.</p>
+        <p>So I went and earned the training to do it right — a <b>Bachelor of Business Administration</b>, an <b>MBA</b>, and a <b>Master of Science in Business Analytics</b>, all from <b>The University of Iowa</b> — plus finance certificates in Finance, Financial Decision-Making, and Investment Management, with an <b>MS in Finance</b> underway.</p>
+        <p>Now I bring the whole stack to small and mid-sized companies: the operating judgment to know which questions matter, the analytics to answer them, and the engineering to ship the tool that acts on the answer — one person, start to finish. That's the entire point of Work Smarter Analytics.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="engagements">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="mono">How we'd work together</span>
+      <h2>Right-sized for a small business, not a Fortune 500.</h2>
+      <p>Start with a focused project, or bring me on as a fractional resource. Pricing below is a starting point — every engagement is scoped to what you actually need.</p>
+    </div>
+    <div class="eng-grid">
+      <div class="eng reveal">
+        <div class="tier">Project</div>
+        <h3>A defined deliverable</h3>
+        <div class="price">from $12K <small>/ project</small></div>
+        <div class="desc">A specific thing built and handed over — a forecasting model, a dashboard, an analysis that settles a decision.</div>
+        <ul>
+          <li>Fixed scope and price</li>
+          <li>You own what's built</li>
+          <li>Typically 2–6 weeks</li>
+        </ul>
+      </div>
+      <div class="eng feature reveal">
+        <div class="tier">Retainer · most popular</div>
+        <h3>Fractional analytics partner</h3>
+        <div class="price">$4K–$11K <small>/ month</small></div>
+        <div class="desc">Ongoing capacity for the company that needs an analytical brain in the room every month, without a full-time hire.</div>
+        <ul>
+          <li>Standing time each month</li>
+          <li>Models &amp; dashboards that evolve with you</li>
+          <li>Three tiers by depth of involvement</li>
+        </ul>
+      </div>
+      <div class="eng reveal">
+        <div class="tier">Advisory</div>
+        <h3>By the hour</h3>
+        <div class="price">$375 <small>/ hour</small></div>
+        <div class="desc">For a second set of eyes on a decision, a model review, or a working session — no long-term commitment.</div>
+        <ul>
+          <li>Pay only for time used</li>
+          <li>Strategy, finance, or analytics</li>
+          <li>Good first step before a larger scope</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <h2 class="reveal">Have a decision you'd rather <em>not</em> guess at?</h2>
+    <p class="reveal">Tell me what's keeping you up — the pricing call, the forecast, the data you can't get a clear read on. First conversation is free.</p>
+    <div class="hero-cta reveal">
+      <a href="mailto:contact@worksmarteranalytics.com" class="btn">Get in touch</a>
+      <a href="#top" class="btn ghost">Back to top ↑</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="#top"><svg class="logo" viewBox="100 342 825 74" role="img" aria-label="Work Smarter Analytics" xmlns="http://www.w3.org/2000/svg"><g>
+	<g>
+		<path fill="#ffffff" d="M159.38,349.25l-11.6,35h-6.9l-8.65-25.9l-8.8,25.9h-6.95l-11.6-35h6.75l8.7,26.6l9.05-26.6h6l8.85,26.75
+			l8.95-26.75H159.38z"/>
+		<path fill="#ffffff" d="M161.83,366.75c0-10.35,8-18,18.85-18c10.85,0,18.85,7.6,18.85,18c0,10.4-8,18-18.85,18
+			C169.83,384.75,161.83,377.1,161.83,366.75z M192.98,366.75c0-7.15-5.25-12.3-12.3-12.3c-7.05,0-12.3,5.15-12.3,12.3
+			s5.25,12.3,12.3,12.3C187.73,379.05,192.98,373.9,192.98,366.75z"/>
+		<path fill="#ffffff" d="M229.33,384.25L222.18,374c-0.45,0.05-0.9,0.05-1.35,0.05h-7.9v10.2h-6.5v-35h14.4c9.2,0,14.9,4.7,14.9,12.45
+			c0,5.3-2.7,9.2-7.45,11.05l8.05,11.5H229.33z M220.53,354.75h-7.6v13.95h7.6c5.7,0,8.65-2.6,8.65-7S226.23,354.75,220.53,354.75z"
+			/>
+		<path fill="#ffffff" d="M255.03,369.6l-5.55,5.7v8.95h-6.5v-35h6.5v17.95l17.3-17.95h7.3l-14.7,15.65l15.6,19.35h-7.6L255.03,369.6z"
+			/>
+		<path fill="#CB9A36" d="M295.73,380.55l2.25-5.05c2.8,2.25,7.25,3.85,11.55,3.85c5.45,0,7.75-1.95,7.75-4.55
+			c0-7.55-20.8-2.6-20.8-15.6c0-5.65,4.5-10.45,14.1-10.45c4.2,0,8.6,1.1,11.65,3.1l-2.05,5.05c-3.15-1.85-6.6-2.75-9.65-2.75
+			c-5.4,0-7.6,2.1-7.6,4.75c0,7.45,20.75,2.6,20.75,15.45c0,5.6-4.55,10.4-14.15,10.4C304.08,384.75,298.63,383.05,295.73,380.55z"
+			/>
+		<path fill="#CB9A36" d="M362.28,384.25l-0.05-23.2l-11.5,19.2h-2.9l-11.5-18.9v22.9h-6.2v-35h5.35l13.9,23.2l13.65-23.2h5.35l0.05,35
+			H362.28z"/>
+		<path fill="#CB9A36" d="M400.58,376.15h-17.5l-3.45,8.1h-6.7l15.75-35h6.4l15.8,35h-6.8L400.58,376.15z M398.43,371.05l-6.6-15.3
+			l-6.55,15.3H398.43z"/>
+		<path fill="#CB9A36" d="M438.23,384.25L431.07,374c-0.45,0.05-0.9,0.05-1.35,0.05h-7.9v10.2h-6.5v-35h14.4c9.2,0,14.9,4.7,14.9,12.45
+			c0,5.3-2.7,9.2-7.45,11.05l8.05,11.5H438.23z M429.42,354.75h-7.6v13.95h7.6c5.7,0,8.65-2.6,8.65-7S435.13,354.75,429.42,354.75z"
+			/>
+		<path fill="#CB9A36" d="M458.47,354.75h-11.6v-5.5h29.7v5.5h-11.6v29.5h-6.5V354.75z"/>
+		<path fill="#CB9A36" d="M507.73,378.8v5.45h-26.25v-35h25.55v5.45h-19.05v9.1h16.9v5.35h-16.9v9.65H507.73z"/>
+		<path fill="#CB9A36" d="M537.88,384.25L530.72,374c-0.45,0.05-0.9,0.05-1.35,0.05h-7.9v10.2h-6.5v-35h14.4c9.2,0,14.9,4.7,14.9,12.45
+			c0,5.3-2.7,9.2-7.45,11.05l8.05,11.5H537.88z M529.07,354.75h-7.6v13.95h7.6c5.7,0,8.65-2.6,8.65-7S534.78,354.75,529.07,354.75z"
+			/>
+		<path fill="#ffffff" d="M594.22,376.15h-17.5l-3.45,8.1h-6.7l15.75-35h6.4l15.8,35h-6.8L594.22,376.15z M592.07,371.05l-6.6-15.3
+			l-6.55,15.3H592.07z"/>
+		<path fill="#ffffff" d="M640.07,349.25v35h-5.35l-19.3-23.7v23.7h-6.45v-35h5.35l19.3,23.7v-23.7H640.07z"/>
+		<path fill="#ffffff" d="M672.17,376.15h-17.5l-3.45,8.1h-6.7l15.75-35h6.4l15.8,35h-6.8L672.17,376.15z M670.02,371.05l-6.6-15.3
+			l-6.55,15.3H670.02z"/>
+		<path fill="#ffffff" d="M686.92,349.25h6.5v29.5h18.3v5.5h-24.8V349.25z"/>
+		<path fill="#ffffff" d="M728.32,371.9v12.35h-6.5V372l-13.75-22.75h6.95l10.25,17.05l10.35-17.05h6.4L728.32,371.9z"/>
+		<path fill="#ffffff" d="M752.87,354.75h-11.6v-5.5h29.7v5.5h-11.6v29.5h-6.5V354.75z"/>
+		<path fill="#ffffff" d="M775.87,349.25h6.5v35h-6.5V349.25z"/>
+		<path fill="#ffffff" d="M789.32,366.75c0-10.45,8-18,18.75-18c5.7,0,10.6,2.05,13.85,5.85l-4.2,3.95c-2.55-2.75-5.7-4.1-9.35-4.1
+			c-7.25,0-12.5,5.1-12.5,12.3c0,7.2,5.25,12.3,12.5,12.3c3.65,0,6.8-1.35,9.35-4.15l4.2,4c-3.25,3.8-8.15,5.85-13.9,5.85
+			C797.32,384.75,789.32,377.2,789.32,366.75z"/>
+		<path fill="#ffffff" d="M825.02,380.55l2.25-5.05c2.8,2.25,7.25,3.85,11.55,3.85c5.45,0,7.75-1.95,7.75-4.55
+			c0-7.55-20.8-2.6-20.8-15.6c0-5.65,4.5-10.45,14.1-10.45c4.2,0,8.6,1.1,11.65,3.1l-2.05,5.05c-3.15-1.85-6.6-2.75-9.65-2.75
+			c-5.4,0-7.6,2.1-7.6,4.75c0,7.45,20.75,2.6,20.75,15.45c0,5.6-4.55,10.4-14.15,10.4C833.37,384.75,827.92,383.05,825.02,380.55z"
+			/>
+	</g>
+	<g>
+		<polygon fill="#ffffff" points="897.01,372.94 876.45,348.76 862.22,348.76 887.79,378.31 862.49,408.93 876.72,408.93 
+			901.62,378.11 		"/>
+		<polygon fill="#CB9A36" points="915.16,372.55 895.2,348.76 880.97,348.76 906.3,378.29 880.99,408.93 895.22,408.93 920.12,378.11 
+					"/>
+	</g>
+	<g>
+		<path fill="#ffffff" d="M121.33,404.57c0,2.79-2.22,4.41-6.47,4.41h-8.36v-16.17h7.9c4.04,0,6.12,1.69,6.12,4.2
+			c0,1.62-0.83,2.86-2.15,3.56C120.17,401.15,121.33,402.53,121.33,404.57z M110.22,395.63v3.81h3.72c1.83,0,2.82-0.65,2.82-1.92
+			c0-1.27-0.99-1.89-2.82-1.89H110.22z M117.56,404.17c0-1.36-1.04-2.01-2.98-2.01h-4.37v4h4.37
+			C116.52,406.16,117.56,405.56,117.56,404.17z"/>
+		<path fill="#ffffff" d="M145.74,405.97v3h-12.52v-16.17h12.22v3h-8.5v3.51h7.51v2.91h-7.51v3.74H145.74z"/>
+		<path fill="#ffffff" d="M166.12,395.86h-5.17v-3.05h14.09v3.05h-5.17v13.12h-3.74V395.86z"/>
+		<path fill="#ffffff" d="M195.68,395.86h-5.17v-3.05h14.09v3.05h-5.17v13.12h-3.74V395.86z"/>
+		<path fill="#ffffff" d="M233.17,405.97v3h-12.52v-16.17h12.22v3h-8.5v3.51h7.51v2.91h-7.51v3.74H233.17z"/>
+		<path fill="#ffffff" d="M256.51,408.98l-3.12-4.5h-0.18h-3.26v4.5h-3.74v-16.17h7c4.32,0,7.02,2.24,7.02,5.87
+			c0,2.43-1.22,4.2-3.32,5.1l3.62,5.2H256.51z M253,395.86h-3.05v5.64H253c2.29,0,3.44-1.06,3.44-2.82
+			C256.44,396.9,255.28,395.86,253,395.86z"/>
+		<path fill="#ffffff" d="M608.56,392.81l-5.29,16.17h-4.02l-3.56-10.95l-3.67,10.95h-3.99l-5.31-16.17h3.88l3.65,11.36l3.81-11.36
+			h3.46l3.69,11.46l3.76-11.46H608.56z"/>
+		<path fill="#ffffff" d="M625.69,392.81h3.74v16.17h-3.74V392.81z"/>
+		<path fill="#ffffff" d="M655.67,395.86h-5.17v-3.05h14.09v3.05h-5.17v13.12h-3.74V395.86z"/>
+		<path fill="#ffffff" d="M697.47,392.81v16.17h-3.74v-6.63h-7.34v6.63h-3.74v-16.17h3.74v6.37h7.34v-6.37H697.47z"/>
+		<path fill="#ffffff" d="M740.95,392.81h7.34c5.29,0,8.91,3.19,8.91,8.08s-3.62,8.08-8.91,8.08h-7.34V392.81z M748.11,405.9
+			c3.21,0,5.31-1.92,5.31-5.01c0-3.09-2.1-5.01-5.31-5.01h-3.42v10.02H748.11z"/>
+		<path fill="#ffffff" d="M783.5,405.51h-7.51l-1.43,3.46h-3.83l7.21-16.17h3.69l7.23,16.17h-3.93L783.5,405.51z M782.32,402.67
+			l-2.56-6.19l-2.56,6.19H782.32z"/>
+		<path fill="#ffffff" d="M809.14,395.86h-5.17v-3.05h14.09v3.05h-5.17v13.12h-3.74V395.86z"/>
+		<path fill="#ffffff" d="M844.95,405.51h-7.5l-1.43,3.46h-3.83l7.21-16.17h3.69l7.23,16.17h-3.93L844.95,405.51z M843.78,402.67
+			l-2.56-6.19l-2.56,6.19H843.78z"/>
+		<path fill="#CB9A36" d="M523.48,407.38l1.27-2.82c1.36,0.99,3.4,1.69,5.34,1.69c2.22,0,3.12-0.74,3.12-1.73c0-3.03-9.4-0.95-9.4-6.95
+			c0-2.75,2.22-5.03,6.81-5.03c2.03,0,4.11,0.48,5.61,1.43l-1.15,2.84c-1.5-0.85-3.05-1.27-4.48-1.27c-2.22,0-3.07,0.83-3.07,1.85
+			c0,2.98,9.4,0.92,9.4,6.86c0,2.7-2.24,5.01-6.86,5.01C527.5,409.25,524.91,408.49,523.48,407.38z"/>
+		<path fill="#CB9A36" d="M317.34,406.83c-1.65,1.61-3.68,2.42-6.1,2.42s-4.45-0.81-6.1-2.42c-1.65-1.61-2.48-3.62-2.48-6.02
+			c0-2.4,0.83-4.41,2.48-6.02c1.65-1.61,3.68-2.42,6.1-2.42s4.45,0.81,6.1,2.42c1.65,1.61,2.48,3.62,2.48,6.02
+			C319.81,403.21,318.99,405.22,317.34,406.83z M316.1,400.82c0-1.46-0.47-2.7-1.4-3.73c-0.93-1.03-2.08-1.54-3.45-1.54
+			c-1.36,0-2.51,0.51-3.45,1.54c-0.93,1.03-1.4,2.27-1.4,3.73s0.47,2.7,1.4,3.72c0.93,1.02,2.08,1.53,3.45,1.53
+			c1.36,0,2.51-0.51,3.45-1.53C315.63,403.52,316.1,402.28,316.1,400.82z"/>
+		<path fill="#CB9A36" d="M340.71,404.87c0.61,0.76,1.42,1.13,2.45,1.13c1.03,0,1.84-0.38,2.44-1.13c0.6-0.76,0.9-1.79,0.9-3.1v-9.02
+			h3.65v9.14c0,2.37-0.65,4.19-1.96,5.46c-1.31,1.27-2.98,1.91-5.02,1.91c-2.04,0-3.72-0.64-5.04-1.92
+			c-1.32-1.28-1.97-3.09-1.97-5.45v-9.14h3.65v9.02C339.8,403.08,340.11,404.11,340.71,404.87z"/>
+		<path fill="#CB9A36" d="M373.35,395.9v13.18h-3.65V395.9h-4.63v-3.15h12.9v3.15H373.35z"/>
+		<path fill="#CB9A36" d="M401.64,405.86c1.79,0,3.26-0.71,4.39-2.13l2.34,2.41c-1.85,2.09-4.04,3.13-6.56,3.13s-4.59-0.79-6.22-2.38
+			c-1.63-1.59-2.44-3.6-2.44-6.02c0-2.42,0.83-4.44,2.49-6.07c1.66-1.62,3.69-2.43,6.09-2.43c2.68,0,4.92,1.02,6.73,3.06l-2.27,2.57
+			c-1.15-1.43-2.59-2.15-4.3-2.15c-1.37,0-2.54,0.45-3.52,1.34s-1.46,2.1-1.46,3.62s0.46,2.74,1.38,3.66
+			C399.21,405.4,400.33,405.86,401.64,405.86z"/>
+		<path fill="#CB9A36" d="M440.12,406.83c-1.65,1.61-3.68,2.42-6.1,2.42s-4.45-0.81-6.1-2.42c-1.65-1.61-2.48-3.62-2.48-6.02
+			c0-2.4,0.83-4.41,2.48-6.02c1.65-1.61,3.68-2.42,6.1-2.42s4.45,0.81,6.1,2.42c1.65,1.61,2.48,3.62,2.48,6.02
+			C442.6,403.21,441.77,405.22,440.12,406.83z M438.88,400.82c0-1.46-0.47-2.7-1.4-3.73c-0.93-1.03-2.08-1.54-3.45-1.54
+			c-1.36,0-2.51,0.51-3.45,1.54c-0.93,1.03-1.4,2.27-1.4,3.73s0.47,2.7,1.4,3.72s2.08,1.53,3.45,1.53c1.36,0,2.51-0.51,3.45-1.53
+			S438.88,402.28,438.88,400.82z"/>
+		<path fill="#CB9A36" d="M471.81,398.8l-4.42,8.93h-2.17l-4.39-8.93v10.28h-3.65v-16.34h4.93l4.21,8.97l4.23-8.97h4.91v16.34h-3.65
+			V398.8z"/>
+		<path fill="#CB9A36" d="M505.74,392.75V396h-8.13v3.37h7.31v3.11h-7.31v3.39H506v3.23h-12.04v-16.34H505.74z"/>
+	</g>
+</g></svg></a>
+    <span class="mono">Work Smarter Analytics, LLC · Northville, Michigan</span>
+    <span class="mono">Operator · Analyst · Builder</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- live revenue model ---- */
+  var svg = document.querySelector('svg.chart');
+  var W=420,H=180,padL=8,padR=8,padT=14,padB=14;
+  var growth=document.getElementById('growth');
+  var churn=document.getElementById('churn');
+  var line=document.getElementById('line');
+  var area=document.getElementById('area');
+  var dots=document.getElementById('dots');
+  var grid=document.getElementById('gridlines');
+  var START=25000, MONTHS=12;
+  var firstDraw=true;
+
+  // static gridlines
+  for(var i=0;i<=4;i++){
+    var y=padT+(H-padT-padB)*i/4;
+    var l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',padL);l.setAttribute('x2',W-padR);
+    l.setAttribute('y1',y);l.setAttribute('y2',y);
+    grid.appendChild(l);
+  }
+
+  function fmt(n){
+    if(n>=1000000) return '$'+(n/1000000).toFixed(2)+'M';
+    if(n>=1000) return '$'+(n/1000).toFixed(1)+'k';
+    return '$'+Math.round(n);
+  }
+
+  function setFill(el){
+    var pct=(el.value-el.min)/(el.max-el.min)*100;
+    el.style.setProperty('--fill',pct+'%');
+  }
+
+  function compute(){
+    var g=parseFloat(growth.value)/100;
+    var c=parseFloat(churn.value)/100;
+    var net=g-c;
+    var series=[], mrr=START, total=0;
+    for(var m=0;m<=MONTHS;m++){
+      series.push(mrr);
+      total+=mrr;
+      mrr=mrr*(1+net);
+    }
+    return {series:series,total:total-series[0],end:series[MONTHS],net:net};
+  }
+
+  function draw(){
+    setFill(growth);setFill(churn);
+    var d=compute();
+    document.getElementById('growthVal').textContent=growth.value+'%';
+    document.getElementById('churnVal').textContent=churn.value+'%';
+    document.getElementById('endMrr').textContent=fmt(d.end);
+    document.getElementById('totalRev').textContent=fmt(d.total);
+    var netEl=document.getElementById('netRate');
+    netEl.textContent=(d.net>=0?'+':'')+(d.net*100).toFixed(1)+'%';
+    netEl.style.color = d.net>=0 ? 'var(--accent-bright)' : 'var(--accent2-soft)';
+
+    var max=Math.max.apply(null,d.series)*1.08;
+    var min=Math.min(START,Math.min.apply(null,d.series))*0.92;
+    var pw=W-padL-padR, ph=H-padT-padB;
+    var pts=d.series.map(function(v,idx){
+      var x=padL+pw*idx/MONTHS;
+      var y=padT+ph*(1-(v-min)/(max-min));
+      return [x,y];
+    });
+    var path='M'+pts.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1)}).join(' L');
+    line.setAttribute('d',path);
+    area.setAttribute('d',path+' L'+(W-padR)+','+(H-padB)+' L'+padL+','+(H-padB)+' Z');
+
+    dots.innerHTML='';
+    [pts[0],pts[MONTHS]].forEach(function(p,k){
+      var ci=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      ci.setAttribute('cx',p[0]);ci.setAttribute('cy',p[1]);ci.setAttribute('r',3.5);
+      ci.setAttribute('fill',k===1?'#E6BB5C':'#ECE6D8');
+      ci.setAttribute('stroke','#16191F');ci.setAttribute('stroke-width','1.5');
+      dots.appendChild(ci);
+    });
+
+    if(firstDraw && !reduce){
+      var len=line.getTotalLength();
+      line.style.transition='none';
+      line.style.strokeDasharray=len;line.style.strokeDashoffset=len;
+      line.getBoundingClientRect();
+      line.style.transition='stroke-dashoffset 1.1s ease';
+      line.style.strokeDashoffset=0;
+      area.style.opacity=0;area.style.transition='opacity 1s ease .25s';
+      requestAnimationFrame(function(){area.style.opacity=1});
+      firstDraw=false;
+    }
+  }
+
+  growth.addEventListener('input',draw);
+  churn.addEventListener('input',draw);
+  draw();
+
+  /* ---- scroll reveal ---- */
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);} });
+    },{threshold:.14});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in')});
+  }
+
+  /* ---- hero headline stagger ---- */
+  if(!reduce){
+    var lines=document.querySelectorAll('.h1-line span');
+    lines.forEach(function(s,i){
+      s.style.transform='translateY(110%)';
+      s.style.transition='transform .7s cubic-bezier(.2,.7,.2,1) '+(0.1+i*0.12)+'s';
+    });
+    requestAnimationFrame(function(){
+      lines.forEach(function(s){s.style.transform='translateY(0)'});
+    });
+  }
+})();
+</script>
+</body>
+</html>
