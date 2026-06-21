@@ -884,5 +884,16 @@
   });
 })();
 </script>
+<script>
+(function(){
+  var name=document.querySelector('.contact-form input[name="name"]');
+  if(!name) return;
+  document.querySelectorAll('a[href="#contact"]').forEach(function(a){
+    a.addEventListener('click',function(){
+      setTimeout(function(){ name.focus({preventScroll:true}); },700);
+    });
+  });
+})();
+</script>
 </body>
 </html>
