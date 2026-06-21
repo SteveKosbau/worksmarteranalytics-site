@@ -221,6 +221,18 @@
   .contact .hero-cta{justify-content:center}
   .edit{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--slate);margin-top:22px}
 
+  .contact-form{max-width:540px;margin:0 auto;display:grid;gap:12px;text-align:left}
+  .contact-form .cf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .contact-form input,.contact-form textarea{font-family:'Hanken Grotesk',sans-serif;font-size:.95rem;color:var(--paper);background:rgba(0,0,0,.25);border:1px solid var(--ink-3);border-radius:8px;padding:12px 14px;width:100%;resize:vertical}
+  .contact-form input::placeholder,.contact-form textarea::placeholder{color:var(--slate)}
+  .contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--accent)}
+  .contact-form button{justify-self:center;margin-top:4px}
+  .contact-form .cf-msg{font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.04em;text-align:center;min-height:1.1em;color:var(--slate)}
+  .contact-form .cf-hp{position:absolute;left:-9999px}
+  .contact-form .cf-top{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);text-align:center;margin-top:2px}
+  .contact-form .cf-top:hover{color:var(--accent-bright)}
+  @media(max-width:520px){.contact-form .cf-row{grid-template-columns:1fr}}
+
   footer{border-top:1px solid var(--ink-3);padding:34px 0;position:relative;z-index:1}
   .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
   .foot .mono{color:var(--slate)}
@@ -607,10 +619,19 @@
   <div class="wrap">
     <h2 class="reveal">Have a decision you'd rather <em>not</em> guess at?</h2>
     <p class="reveal">Tell me what's keeping you up — the pricing call, the forecast, the data you can't get a clear read on. First conversation is free.</p>
-    <div class="hero-cta reveal">
-      <a href="mailto:contact@worksmarteranalytics.com" class="btn">Get in touch</a>
-      <a href="#top" class="btn ghost">Back to top ↑</a>
-    </div>
+    <form class="contact-form reveal" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="WEB3FORMS_ACCESS_KEY" />
+      <input type="hidden" name="subject" value="New inquiry from worksmarteranalytics.com" />
+      <input type="checkbox" name="botcheck" class="cf-hp" tabindex="-1" autocomplete="off" />
+      <div class="cf-row">
+        <input type="text" name="name" placeholder="Your name" required />
+        <input type="email" name="email" placeholder="Email" required />
+      </div>
+      <textarea name="message" rows="4" placeholder="What's keeping you up — the pricing call, the forecast, the data you can't get a clear read on?" required></textarea>
+      <button type="submit" class="btn">Send message</button>
+      <div class="cf-msg" aria-live="polite"></div>
+      <a href="#top" class="cf-top">Back to top ↑</a>
+    </form>
   </div>
 </section>
 
@@ -841,6 +862,28 @@
       lines.forEach(function(s){s.style.transform='translateY(0)'});
     });
   }
+})();
+</script>
+<script>
+(function(){
+  var f=document.querySelector('.contact-form');
+  if(!f) return;
+  var msg=f.querySelector('.cf-msg');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(f.access_key && f.access_key.value.indexOf('WEB3FORMS')===0){
+      msg.style.color='var(--accent2-soft)';msg.textContent='Form not configured yet (access key missing).';return;
+    }
+    msg.style.color='var(--slate)';msg.textContent='Sending…';
+    var data=Object.fromEntries(new FormData(f));
+    fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)})
+      .then(function(r){return r.json()})
+      .then(function(j){
+        if(j.success){f.reset();msg.style.color='var(--accent-bright)';msg.textContent="Thanks — your message is in. I'll be in touch shortly.";}
+        else{msg.style.color='var(--accent2-soft)';msg.textContent="That didn't go through — please email contact@worksmarteranalytics.com.";}
+      })
+      .catch(function(){msg.style.color='var(--accent2-soft)';msg.textContent="That didn't go through — please email contact@worksmarteranalytics.com.";});
+  });
 })();
 </script>
 </body>
