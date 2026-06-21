@@ -619,10 +619,11 @@
   <div class="wrap">
     <h2 class="reveal">Have a decision you'd rather <em>not</em> guess at?</h2>
     <p class="reveal">Tell me what's keeping you up — the pricing call, the forecast, the data you can't get a clear read on. First conversation is free.</p>
-    <form class="contact-form reveal" action="https://api.web3forms.com/submit" method="POST">
-      <input type="hidden" name="access_key" value="WEB3FORMS_ACCESS_KEY" />
-      <input type="hidden" name="subject" value="New inquiry from worksmarteranalytics.com" />
-      <input type="checkbox" name="botcheck" class="cf-hp" tabindex="-1" autocomplete="off" />
+    <form class="contact-form reveal" action="https://formsubmit.co/ajax/steve@worksmarteranalytics.com" method="POST">
+      <input type="hidden" name="_subject" value="New inquiry from worksmarteranalytics.com" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="text" name="_honey" class="cf-hp" tabindex="-1" autocomplete="off" />
       <div class="cf-row">
         <input type="text" name="name" placeholder="Your name" required />
         <input type="email" name="email" placeholder="Email" required />
@@ -871,18 +872,15 @@
   var msg=f.querySelector('.cf-msg');
   f.addEventListener('submit',function(e){
     e.preventDefault();
-    if(f.access_key && f.access_key.value.indexOf('WEB3FORMS')===0){
-      msg.style.color='var(--accent2-soft)';msg.textContent='Form not configured yet (access key missing).';return;
-    }
     msg.style.color='var(--slate)';msg.textContent='Sending…';
     var data=Object.fromEntries(new FormData(f));
-    fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)})
+    fetch(f.action,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)})
       .then(function(r){return r.json()})
       .then(function(j){
-        if(j.success){f.reset();msg.style.color='var(--accent-bright)';msg.textContent="Thanks — your message is in. I'll be in touch shortly.";}
-        else{msg.style.color='var(--accent2-soft)';msg.textContent="That didn't go through — please email contact@worksmarteranalytics.com.";}
+        if(j.success===true||j.success==="true"){f.reset();msg.style.color='var(--accent-bright)';msg.textContent="Thanks — your message is in. I'll be in touch shortly.";}
+        else{msg.style.color='var(--accent-bright)';msg.textContent=(j.message||"Got it — check your email to confirm.");}
       })
-      .catch(function(){msg.style.color='var(--accent2-soft)';msg.textContent="That didn't go through — please email contact@worksmarteranalytics.com.";});
+      .catch(function(){msg.style.color='var(--accent2-soft)';msg.textContent="That didn't go through — please email steve@worksmarteranalytics.com.";});
   });
 })();
 </script>
