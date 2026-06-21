@@ -184,6 +184,21 @@
   .cred .k{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--paper-dim);line-height:1.4}
   .cred .k em{font-style:normal;color:var(--slate);display:block;margin-top:3px}
 
+  /* ---------- about / founder ---------- */
+  .about{display:grid;grid-template-columns:.82fr 1.18fr;gap:48px;align-items:center}
+  .about .photo{aspect-ratio:4/5;border-radius:14px;border:1px solid var(--ink-3);
+    background:linear-gradient(168deg,#1E222A,#16191F);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:12px;position:relative;overflow:hidden}
+  .about .photo::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:22px 22px;opacity:.5}
+  .about .photo .ph-mark{font-family:'Fraunces',serif;font-weight:600;font-size:3.4rem;color:var(--accent);position:relative}
+  .about .photo .ph-note{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);position:relative}
+  .about .bio p{color:var(--paper-dim);font-size:1.05rem;margin-bottom:16px}
+  .about .bio p:last-child{margin-bottom:0}
+  .about .bio b{color:var(--paper);font-weight:600}
+  @media(max-width:920px){.about{grid-template-columns:1fr;gap:30px}.about .photo{max-width:280px}}
+
   /* ---------- engagements ---------- */
   .eng-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
   .eng{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:14px;padding:30px 26px;display:flex;flex-direction:column}
@@ -513,6 +528,31 @@
       <div class="cred"><div class="v">BI</div><div class="k">Dashboards &amp; automation<em>design → deploy</em></div></div>
       <div class="cred"><div class="v">1</div><div class="k">Granted U.S. patent<em>named inventor</em></div></div>
       <div class="cred"><div class="v">30+</div><div class="k">Years operating<em>incl. company president</em></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / FOUNDER — DRAFT, HIDDEN until the right headshot is chosen.
+     TO PUBLISH: (1) remove the `hidden` attribute on the <section> below,
+     (2) replace the .photo placeholder block with <img class="shot" src="steve.jpg" alt="Steve Kosbau" />,
+     (3) optionally add <a href="#about">About</a> to the header nav. -->
+<section class="band" id="about" hidden>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="mono">Who you'd be working with</span>
+      <h2>Steve Kosbau</h2>
+      <p>Founder, Work Smarter Analytics · Northville, MI</p>
+    </div>
+    <div class="about reveal">
+      <div class="photo" role="img" aria-label="Photo of Steve Kosbau — placeholder">
+        <span class="ph-mark">SK</span>
+        <span class="ph-note">photo coming soon</span>
+      </div>
+      <div class="bio">
+        <p>I came to analytics from the operator's chair, not a lab. Running radio stations in markets large and small across the country, I watched the sharpest operators — our toughest competitors included — turn data into a durable edge. That lesson never left me.</p>
+        <p>So I went and earned the training to do it right — a <b>Bachelor of Business Administration</b>, an <b>MBA</b>, and a <b>Master of Science in Business Analytics</b>, all from <b>The University of Iowa</b> — plus finance certificates in Finance, Financial Decision-Making, and Investment Management, with an <b>MS in Finance</b> underway.</p>
+        <p>Now I bring the whole stack to small and mid-sized companies: the operating judgment to know which questions matter, the analytics to answer them, and the engineering to ship the tool that acts on the answer — one person, start to finish. That's the entire point of Work Smarter Analytics.</p>
+      </div>
     </div>
   </div>
 </section>
